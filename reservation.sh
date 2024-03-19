@@ -41,17 +41,27 @@ else
     menu
     echo "HELLLOOO"
 fi
-
 } 
+
+addMovie () {
+    clear
+    echo "╔═════════════════════════════╗
+║     Add a Movie Listing     ║
+╚═════════════════════════════╝"
+    read -p "Enter movie title: " title
+    read -p "Enter movie pricee: " price
+    read -p "Enter scheduled screenings (as separated by commas): " time
+    echo -e "$title,$price,$time" >> $DATA_DIR/movies.csv
+}
 
 viewMovies () {
     if ! grep -q . "$DATA_DIR/movies.csv"; then
         echo "No data found!"
     else
-        while IFS="," read -r rec_itemNo rec_title rec_price rec_timesched
+        while IFS="," read -r rec_title rec_price rec_timesched
         do
             echo "Title: $rec_title"
-            echo "Price: $rec_price"
+            echo "Price: ₱$rec_price"
             echo "Scheduled Screenings: $rec_timesched"
             echo ""
         done < <(tail -n +2 $DATA_DIR/movies.csv)
@@ -62,7 +72,8 @@ viewMovies () {
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃  1. View Movie Seating                    ┃
 ┃  2. Reserve a Seat                        ┃
-┃  3. Back                                  ┃
+┃  3. Add Movie Listing                     ┃
+┃  4. Back                                  ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 EOF
         echo "What would you like to do?"
@@ -75,6 +86,10 @@ EOF
                 echo "chose 2"
                 ;;
             3)
+                addMovie
+                viewMovies
+                ;;
+            4)
                 menu
                 ;;
         esac
